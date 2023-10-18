@@ -3,7 +3,7 @@ This is out main driver file. This will be responsible for handling user input a
 """
 
 import pygame as p
-from Chess import ChessEngine
+from Chess import ChessEngine, ChessAi
 
 p.init()
 WIDTH = HEIGHT = 512 #400 is an option
@@ -44,15 +44,21 @@ def main():
     sqSelected = () #no square selected initially, keep track of last click of user in tuple (row, column)
     playerClicks = [] #keep track of player clicks, two tuples [(6, 4), (4,4)]
     gameOver = False
+    '''
+    TO set player set playerOne or playerTwo to True, for Ai false
+    '''
+    playerOne = False #If human is playing white then this will be true. If AI then false
+    playerTwo = False # Same as above but for black
 
     while running:
+        humanTurn = (gs.whiteToMove and playerOne) or (not gs.whiteToMove and playerTwo)
         for e in p.event.get():
             if e.type == p.QUIT:
                 running = False
 
             #mouse handler
             elif e.type == p.MOUSEBUTTONDOWN:
-                if not gameOver:
+                if not gameOver and humanTurn:
                     location = p.mouse.get_pos() #(x, y) location of mouse
                     col = location[0]//SQ_SIZE
                     row = location[1]//SQ_SIZE
@@ -94,10 +100,19 @@ def main():
                     moveMade = False
                     animate = False
 
+        #AI move finder logic
+        if not gameOver and not humanTurn:
+            AIMove = ChessAi.findBestMove(gs, validMoves)
+            if AIMove is None:
+                AIMove = ChessAi.findRandomMove(validMoves)
+            gs.makeMove(AIMove)
+            moveMade = True
+            animate = True
+
         if moveMade:
             if animate:
                 animateMove(gs.moveLog[-1], screen, gs.board, clock)
-                print(move.getChessNotation())
+                # print(move.getChessNotation())
             validMoves = gs.getValidMoves()
             moveMade = False
             animate = False

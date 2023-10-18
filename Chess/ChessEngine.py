@@ -266,31 +266,6 @@ class GameState():
 
 
     '''
-    Get all possible moves for the rook located at row, col and add these moves to the list
-    '''
-    def getRookMoves(self, r, c, moves):
-        directions = ((-1, 0), (0, -1), (1, 0), (0, 1)) #up, left, down and right
-        enemyColor ="b" if self.whiteToMove else "w"
-        for d in directions:
-            for i in range(1,8):
-                endRow = r + d[0] * i
-                endCol = c + d[1] * 1
-
-                if 0 <= endRow < 8 and 0 <= endCol <8: #on board
-                    endPiece = self.board[endRow][endCol]
-                    if endPiece == "--": #empty space valid
-                        moves.append(Move((r, c), (endRow, endCol), self.board))
-                    elif endPiece[0] == enemyColor: #enemy piece valid
-                        moves.append(Move((r, c), (endRow, endCol), self.board))
-                        break
-                    else: #friendly piece break
-                        break
-
-                else: #off board
-                        break
-
-
-    '''
         Get all possible moves for the knight located at row, col and add these moves to the list
     '''
     def getKnightMoves(self, r, c, moves):
@@ -313,6 +288,30 @@ class GameState():
         enemyColor = "b" if self.whiteToMove else "w"
         for d in directions:
             for i in range(1, 8): #bishop can move max of 7
+                endRow = r + d[0] * i
+                endCol = c + d[1] * i
+
+                if 0 <= endRow < 8 and 0 <= endCol < 8:  # on board
+                    endPiece = self.board[endRow][endCol]
+                    if endPiece == "--":  # empty space valid
+                        moves.append(Move((r, c), (endRow, endCol), self.board))
+                    elif endPiece[0] == enemyColor:  # enemy piece valid
+                        moves.append(Move((r, c), (endRow, endCol), self.board))
+                        break
+                    else:  # friendly piece break
+                        break
+
+                else:  # off board
+                    break
+
+    '''
+        Get all possible moves for the rook located at row, col and add these moves to the list
+    '''
+    def getRookMoves(self, r, c, moves):
+        directions = ((-1, 0), (0, -1), (1, 0), (0, 1))  # up, left, down and right
+        enemyColor = "b" if self.whiteToMove else "w"
+        for d in directions:
+            for i in range(1, 8):
                 endRow = r + d[0] * i
                 endCol = c + d[1] * i
 
