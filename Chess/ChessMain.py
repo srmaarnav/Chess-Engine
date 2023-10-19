@@ -47,7 +47,7 @@ def main():
     '''
     TO set player set playerOne or playerTwo to True, for Ai false
     '''
-    playerOne = False #If human is playing white then this will be true. If AI then false
+    playerOne = True  # If human is playing white then this will be true. If AI then false
     playerTwo = False # Same as above but for black
 
     while running:
@@ -92,6 +92,7 @@ def main():
                     gs.undoMove()
                     moveMade = True
                     animate = False
+                    gameOver = False
                 if e.key == p.K_r: #reset when r is pressed
                     gs = ChessEngine.GameState()
                     validMoves = gs.getValidMoves()
@@ -99,10 +100,12 @@ def main():
                     playerClicks = []
                     moveMade = False
                     animate = False
+                    gameOver = False
 
         #AI move finder logic
         if not gameOver and not humanTurn:
-            AIMove = ChessAi.findBestMove(gs, validMoves)
+            # AIMove = ChessAi.findBestMove(gs, validMoves)
+            AIMove = ChessAi.findBestMoveMinMax(gs, validMoves)
             if AIMove is None:
                 AIMove = ChessAi.findRandomMove(validMoves)
             gs.makeMove(AIMove)
